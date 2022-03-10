@@ -10,4 +10,3 @@ except:
     print("File cannot be found!")
 
 np_answer = np.array(answer_list)
-print(np_answer)
