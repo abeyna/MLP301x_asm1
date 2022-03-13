@@ -11,6 +11,7 @@ except:
     print("File cannot be found!")
 
 print("**** ANALYZING ****")
+print("\n*************************************************************************")
 
 df_exam = df_raw[0].str.split(',', n=1, expand=True)
 df_exam.rename(columns={0: "Student Code", 1: "Answers"}, inplace=True)
@@ -25,11 +26,15 @@ df_exam['Answers'] = df_exam['Answers'].apply(to_array)
 
 def check_code(code):
     if not re.findall("^N[0-9]{8}", code[0:9]):
-        return code[0:9]
+        print("- Invalid line of data: N# is invalid")
+        print(code)
+        return code
 
 
 def check_data(raw_str):
     if len(raw_str.split(',')) != 26:
+        print("- Invalid line of data: does not contain exactly 26 values:")
+        print(raw_str)
         return raw_str
 
 
@@ -49,15 +54,18 @@ def find_invalid_answer(answer_arr):
 
 df_exam["Valid"] = df_exam["Student Code"].apply(find_invalid_code) & df_exam["Answers"].apply(find_invalid_answer)
 
-invalid_lines = df_exam["Valid"].values.sum()
-valid_lines = df_exam["Student Code"].count() - invalid_lines
-if invalid_lines == 0:
-    print("No errors found!")
-else:
-    print("Invalid line of data: does not contain exactly 26 values:")
-
-print("**** REPORT ****")
+valid_lines = df_exam["Valid"].values.sum()
+invalid_lines = df_exam["Student Code"].count() - valid_lines
 
 print(df_exam)
+print("*************************************************************************\n")
+
+if invalid_lines == 0:
+    print("No errors found!")
+
+df_raw[0].apply(check_data)
+df_raw[0].apply(check_code)
+
+print("\n**** REPORT ****")
 print(f"Total valid lines of data: {valid_lines}")
 print(f"Total invalid lines of data: {invalid_lines}")
