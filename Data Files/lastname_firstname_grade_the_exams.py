@@ -90,7 +90,7 @@ df_valid.set_index("Student Code", inplace=True)
 
 df_valid["Correct Total"] = df_valid["Answers"].apply(count_correct_answer)
 df_valid["Blank Total"] = df_valid["Answers"].apply(count_blank_answer)
-df_valid["Incorrect Total"] = 26 - df_valid["Correct Total"] - df_valid["Blank Total"]
+df_valid["Incorrect Total"] = 25 - df_valid["Correct Total"] - df_valid["Blank Total"]
 df_valid["Grades"] = df_valid["Correct Total"] * 4 + df_valid["Incorrect Total"] * (-1)
 
 print("\n*************************************************************************")
